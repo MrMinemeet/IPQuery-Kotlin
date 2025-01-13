@@ -17,4 +17,8 @@ data class LocationInfo(
 		get() = country_code
 	val resolvedTimezone: TimeZone
 		get() = TimeZone.getTimeZone(timezone)
+
+	override fun toString(): String {
+		return "LocationInfo(country='$country', country_code='$country_code', city='$city', state='$state', zipcode='$zipcode', latitude=$latitude, longitude=$longitude, timezone='$timezone', localtime='$localtime')"
+	}
 }

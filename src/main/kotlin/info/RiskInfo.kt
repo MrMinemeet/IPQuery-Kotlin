@@ -22,4 +22,8 @@ data class RiskInfo(
 		get() = is_datacenter
 	val riskScore: Int
 		get() = risk_score
+
+	override fun toString(): String {
+		return "RiskInfo(is_mobile=$is_mobile, is_vpn=$is_vpn, is_tor=$is_tor, is_proxy=$is_proxy, is_datacenter=$is_datacenter, risk_score=$risk_score)"
+	}
 }

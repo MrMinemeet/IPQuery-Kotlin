@@ -16,4 +16,8 @@ data class IpInfo(
 ) {
 	val ipAddress: InetAddress?
 		get() = InetAddress.getByName(ip)
+
+	override fun toString(): String {
+		return "IpInfo(ip='$ip', isp=$isp, location=$location, risk=$risk)"
+	}
 }
