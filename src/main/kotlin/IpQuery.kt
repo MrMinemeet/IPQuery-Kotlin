@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2025.
+ * This work is created by Alexander Voglsperger and is licenced under the MIT license.
+ */
+
 import com.google.gson.Gson
 import info.IpInfo
 import java.net.InetAddress
@@ -5,7 +10,6 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-
 
 class IpQuery {
 	/**

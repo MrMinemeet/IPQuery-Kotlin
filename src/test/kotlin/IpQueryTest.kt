@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2025.
+ * This work is created by Alexander Voglsperger and is licenced under the MIT license.
+ */
+
 import info.IpInfo
 import java.net.InetAddress
 import org.junit.jupiter.api.assertDoesNotThrow
