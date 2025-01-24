@@ -13,7 +13,6 @@ class IpQueryTest {
 		val ipInfo = IpQuery.querySpecificIp("1.1.1.1")
 		assertEquals("1.1.1.1", ipInfo.ip)
 		assertIpInfoNotNull(ipInfo)
-		println(ipInfo.ip)
 	}
 
 	@Test
@@ -21,7 +20,6 @@ class IpQueryTest {
 		val ipInfo = IpQuery.querySpecificIp(InetAddress.getByName("1.1.1.1"))
 		assertEquals("1.1.1.1", ipInfo.ip)
 		assertIpInfoNotNull(ipInfo)
-		println(ipInfo.ip)
 	}
 
 	@Test
@@ -29,7 +27,6 @@ class IpQueryTest {
 		val ipInfos = IpQuery.queryBulkIpsStr(listOf("1.1.1.1", "8.8.8.8"))
 		assertEquals(2, ipInfos.size)
 		ipInfos.forEach { assertIpInfoNotNull(it) }
-		ipInfos.forEach { println(it.ip) }
 	}
 
 	@Test
@@ -37,7 +34,30 @@ class IpQueryTest {
 		val ipInfos = IpQuery.queryBulkIps(listOf("1.1.1.1", "8.8.8.8").map { InetAddress.getByName(it) })
 		assertEquals(2, ipInfos.size)
 		ipInfos.forEach { assertIpInfoNotNull(it) }
-		ipInfos.forEach { println(it.ip) }
+	}
+
+	@Test
+	fun testBulkQueryVarArgsWithStr() {
+		val ipInfoStr = IpQuery.queryBulkIpsStr(listOf("1.1.1.1", "8.8.8.8"))
+		val ipInfoVarArgStr = IpQuery.queryBulkIpsStr("1.1.1.1", "8.8.8.8")
+		assertLooseIpInfoEquals(ipInfoStr, ipInfoVarArgStr)
+	}
+
+	@Test
+	fun testBulkQueryIpVarArgs() {
+		val ipInfoStr = IpQuery.queryBulkIps(listOf(InetAddress.getByName("1.1.1.1"), InetAddress.getByName("8.8.8.8")))
+		val ipInfoVarArgStr = IpQuery.queryBulkIps(InetAddress.getByName("1.1.1.1"), InetAddress.getByName("8.8.8.8"))
+		assertLooseIpInfoEquals(ipInfoStr, ipInfoVarArgStr)
+	}
+
+	@Test
+	fun testEqualStrAndInetResult() {
+		assertLooseIpInfoEquals(IpQuery.querySpecificIp("1.1.1.1"), IpQuery.querySpecificIp(InetAddress.getByName("1.1.1.1")))
+
+		assertLooseIpInfoEquals(
+			IpQuery.queryBulkIpsStr("1.1.1.1", "8.8.8.8"),
+			IpQuery.queryBulkIps(InetAddress.getByName("1.1.1.1"), InetAddress.getByName("8.8.8.8"))
+		)
 	}
 
 	@Test
@@ -109,6 +129,20 @@ class IpQueryTest {
 		obj::class.memberProperties.forEach {
 			val value = it.getter.call(obj)
 			assertNotNull(value, "${it.name} is null!")
+		}
+	}
+
+	private fun assertLooseIpInfoEquals(expected: IpInfo, actual: IpInfo) {
+		assertEquals(expected.ip, actual.ip)
+		assertEquals(expected.isp, actual.isp)
+		assertTrue(expected.location.looseEquals(actual.location))
+		assertEquals(expected.risk, actual.risk)
+	}
+
+	private fun assertLooseIpInfoEquals(expected: List<IpInfo>, actual: List<IpInfo>) {
+		assertEquals(expected.size, actual.size)
+		for (idx in expected.indices) {
+			assertLooseIpInfoEquals(expected[idx], actual[idx])
 		}
 	}
 }

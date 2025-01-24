@@ -106,11 +106,31 @@ class IpQuery {
 
 		/**
 		 * Query the information of multiple IP addresses
+		 * @param ips The IP addresses to query
+		 * @return The information about the IP addresses
+		 * @throws RuntimeException If the request fails
+		 */
+		fun queryBulkIpsStr(vararg ips: String): List<IpInfo> {
+			return queryBulkIpsStr(ips.asList())
+		}
+
+		/**
+		 * Query the information of multiple IP addresses
 		 * @param ips The InetAddresses to query
 		 * @return The information about the IP addresses
 		 * @throws RuntimeException If the request fails
 		 */
 		fun queryBulkIps(ips: List<InetAddress>): List<IpInfo> {
+			return queryBulkIpsStr(ips.map { it.hostAddress })
+		}
+
+		/**
+		 * Query the information of multiple IP addresses
+		 * @param ips The InetAddresses to query
+		 * @return The information about the IP addresses
+		 * @throws RuntimeException If the request fails
+		 */
+		fun queryBulkIps(vararg ips: InetAddress): List<IpInfo> {
 			return queryBulkIpsStr(ips.map { it.hostAddress })
 		}
 

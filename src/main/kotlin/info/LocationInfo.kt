@@ -21,4 +21,19 @@ data class LocationInfo(
 	override fun toString(): String {
 		return "LocationInfo(country='$country', country_code='$country_code', city='$city', state='$state', zipcode='$zipcode', latitude=$latitude, longitude=$longitude, timezone='$timezone', localtime='$localtime')"
 	}
+
+	/**
+	 * Compares this location to another location.
+	 * The [localtime] field is not considered in the comparison.
+	 */
+	fun looseEquals(other: LocationInfo): Boolean {
+		return country == other.country &&
+				country_code == other.country_code &&
+				city == other.city &&
+				state == other.state &&
+				zipcode == other.zipcode &&
+				latitude == other.latitude &&
+				longitude == other.longitude &&
+				timezone == other.timezone
+	}
 }
