@@ -1,5 +1,6 @@
 import info.IpInfo
 import java.net.InetAddress
+import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.reflect.full.memberProperties
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -44,6 +45,15 @@ class IpQueryTest {
 		val ownIp = IpQuery.queryIp()
 		assertNotNull(ownIp)
 		assertTrue { ownIp.isNotBlank() }
+		// Should be a valid IP address
+		assertDoesNotThrow { InetAddress.getByName(ownIp) }
+	}
+
+	@Test
+	fun testQueryOwnIpInfo() {
+		val ownIpInfo = IpQuery.queryIpInfo()
+		assertNotNull(ownIpInfo)
+		assertIpInfoNotNull(ownIpInfo)
 	}
 
 	private fun assertIpInfoNotNull(obj: IpInfo) {
