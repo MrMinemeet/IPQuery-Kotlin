@@ -56,6 +56,48 @@ class IpQueryTest {
 		assertIpInfoNotNull(ownIpInfo)
 	}
 
+	@Test
+	fun testBasicQueryRawXML() {
+		val raw = IpQuery.querySpecificIpRaw(IpQuery.ResponseFormat.XML, "1.1.1.1")
+		assertTrue { raw.isNotBlank() }
+		assertTrue { raw.startsWith("<") && raw.endsWith(">") }
+	}
+
+	@Test
+	fun testBulkQueryRawXML() {
+		val raw = IpQuery.queryBulkIpsRaw(IpQuery.ResponseFormat.XML, listOf("1.1.1.1", "8.8.8.8"))
+		assertTrue { raw.isNotBlank() }
+		assertTrue { raw.startsWith("<") && raw.endsWith(">") }
+	}
+
+	@Test
+	fun testQueryOwnIpRawXML() {
+		val raw = IpQuery.queryIpInfoRaw(IpQuery.ResponseFormat.XML)
+		assertTrue { raw.isNotBlank() }
+		assertTrue { raw.startsWith("<") && raw.endsWith(">") }
+	}
+
+	@Test
+	fun testBasicQueryRawJSON() {
+		val raw = IpQuery.querySpecificIpRaw(IpQuery.ResponseFormat.JSON, "1.1.1.1")
+		assertTrue { raw.isNotBlank() }
+		assertTrue { raw.startsWith("{") && raw.endsWith("}") }
+	}
+
+	@Test
+	fun testBulkQueryRawJSON() {
+		val raw = IpQuery.queryBulkIpsRaw(IpQuery.ResponseFormat.JSON, listOf("1.1.1.1", "8.8.8.8"))
+		assertTrue { raw.isNotBlank() }
+		assertTrue { raw.startsWith("[") && raw.endsWith("]") }
+	}
+
+	@Test
+	fun testQueryOwnIpRawJSON() {
+		val raw = IpQuery.queryIpInfoRaw(IpQuery.ResponseFormat.JSON)
+		assertTrue { raw.isNotBlank() }
+		assertTrue { raw.startsWith("{") && raw.endsWith("}") }
+	}
+
 	private fun assertIpInfoNotNull(obj: IpInfo) {
 		assertMembersNotNull(obj)
 		assertMembersNotNull(obj.isp)
