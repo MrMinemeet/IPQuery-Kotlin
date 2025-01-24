@@ -10,6 +10,7 @@ import java.net.http.HttpResponse
 class IpQuery {
 	companion object {
 		private const val BASE_URL = "https://api.ipquery.io/"
+		private const val DEFAULT_FORMAT = "?format=json"
 		private val client = HttpClient.newHttpClient()
 		private val gson = Gson()
 
@@ -20,15 +21,7 @@ class IpQuery {
 		 * @throws RuntimeException If the request fails
 		 */
 		fun queryIp(): String {
-			val request = HttpRequest.newBuilder()
-				.uri(URI.create(BASE_URL))
-				.build()
-			val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
-			if (response.statusCode() != 200) {
-				throw RuntimeException("Failed to receive own IP! ${response.statusCode()}")
-			}
-			return response.body()
+			return makeRequest(URI.create("$BASE_URL$DEFAULT_FORMAT"))
 		}
 
 		// ---------------------------------------------------------------------
@@ -39,16 +32,8 @@ class IpQuery {
 		 * @throws RuntimeException If the request fails
 		 */
 		fun querySpecificIp(ip: String): IpInfo {
-			val request = HttpRequest.newBuilder()
-				.uri(URI.create("$BASE_URL$ip"))
-				.build()
-			val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
-			if (response.statusCode() != 200) {
-				throw RuntimeException("Failed to query for '$ip'! ${response.statusCode()}")
-			}
-
-			return gson.fromJson(response.body(), IpInfo::class.java)
+			val responseBody = makeRequest(URI.create("$BASE_URL$ip$DEFAULT_FORMAT"))
+			return gson.fromJson(responseBody, IpInfo::class.java)
 		}
 
 		/**
@@ -69,16 +54,8 @@ class IpQuery {
 		 * @throws RuntimeException If the request fails
 		 */
 		fun queryBulkIpsStr(ips: List<String>): List<IpInfo> {
-			val request = HttpRequest.newBuilder()
-				.uri(URI.create("$BASE_URL${ips.joinToString(",")}"))
-				.build()
-			val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
-			if (response.statusCode() != 200) {
-				throw RuntimeException("Failed to query IP information'! ${response.statusCode()}")
-			}
-
-			return gson.fromJson(response.body(), Array<IpInfo>::class.java).toList()
+			val responseBody = makeRequest(URI.create("$BASE_URL${ips.joinToString(",")}$DEFAULT_FORMAT"))
+			return gson.fromJson(responseBody, Array<IpInfo>::class.java).toList()
 		}
 
 		/**
@@ -89,6 +66,22 @@ class IpQuery {
 		 */
 		fun queryBulkIps(ips: List<InetAddress>): List<IpInfo> {
 			return queryBulkIpsStr(ips.map { it.hostAddress })
+		}
+
+		/**
+		 * Perform a request to the given URI
+		 * @param uri The URI to request
+		 * @return The response from the request
+		 * @throws RuntimeException If the request fails
+		 */
+		private fun makeRequest(uri: URI): String {
+			val request = HttpRequest.newBuilder().uri(uri).build()
+			val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+			if (response.statusCode() != 200) {
+				throw RuntimeException("Failed to receive own IP! ${response.statusCode()}")
+			}
+			return response.body()
 		}
 	}
 }
