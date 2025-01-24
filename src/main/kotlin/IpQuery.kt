@@ -17,11 +17,22 @@ class IpQuery {
 		// ---------------------------------------------------------------------
 		/**
 		 * Query the IP of the current machine
-		 * @return The IP information of the current machine
+		 * @return The IP of the current machine
 		 * @throws RuntimeException If the request fails
 		 */
 		fun queryIp(): String {
-			return makeRequest(URI.create("$BASE_URL$DEFAULT_FORMAT"))
+			return makeRequest(URI.create("$BASE_URL?format=text"))
+		}
+
+		// ---------------------------------------------------------------------
+		/**
+		 * Query the IP information of the current machine
+		 * @return The IP information of the current machine
+		 * @throws RuntimeException If the request fails
+		 */
+		fun queryIpInfo(): IpInfo {
+			val responseBody = makeRequest(URI.create("$BASE_URL$DEFAULT_FORMAT"))
+			return gson.fromJson(responseBody, IpInfo::class.java)
 		}
 
 		// ---------------------------------------------------------------------
