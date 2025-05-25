@@ -5,6 +5,9 @@
 
 package info
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class IspInfo(
 	val asn: String,
 	val org: String,

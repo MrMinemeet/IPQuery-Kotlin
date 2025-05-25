@@ -6,6 +6,7 @@
 package info
 
 import java.net.InetAddress
+import kotlinx.serialization.Serializable
 
 /**
  * Represents the information about an IP address.
@@ -13,6 +14,7 @@ import java.net.InetAddress
  *
  * Additionally, some additional non-backed properties are added for convenience.
  */
+@Serializable
 data class IpInfo(
 	val ip: String,
 	val isp: IspInfo,
