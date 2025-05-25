@@ -6,7 +6,9 @@
 package info
 
 import java.util.*
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class LocationInfo(
 	val country: String,
 	val country_code: String, // Intentionally snake_case to match JSON

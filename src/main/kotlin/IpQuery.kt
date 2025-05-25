@@ -3,13 +3,13 @@
  * This work is created by Alexander Voglsperger and is licenced under the MIT license.
  */
 
-import com.google.gson.Gson
 import info.IpInfo
 import java.net.InetAddress
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import kotlinx.serialization.json.Json
 
 class IpQuery {
 	/**
@@ -31,7 +31,6 @@ class IpQuery {
 		private const val BASE_URL = "https://api.ipquery.io/"
 		private const val DEFAULT_FORMAT = "?format=json"
 		private val client = HttpClient.newHttpClient()
-		private val gson = Gson()
 
 		// ---------------------------------------------------------------------
 		/**
@@ -51,7 +50,7 @@ class IpQuery {
 		 */
 		fun queryIpInfo(): IpInfo {
 			val responseBody = makeRequest(URI.create("$BASE_URL$DEFAULT_FORMAT"))
-			return gson.fromJson(responseBody, IpInfo::class.java)
+			return Json.decodeFromString<IpInfo>(responseBody)
 		}
 
 		/**
@@ -72,7 +71,7 @@ class IpQuery {
 		 */
 		fun querySpecificIp(ip: String): IpInfo {
 			val responseBody = makeRequest(URI.create("$BASE_URL$ip$DEFAULT_FORMAT"))
-			return gson.fromJson(responseBody, IpInfo::class.java)
+			return Json.decodeFromString<IpInfo>(responseBody)
 		}
 
 		/**
@@ -105,7 +104,7 @@ class IpQuery {
 		 */
 		fun queryBulkIpsStr(ips: List<String>): List<IpInfo> {
 			val responseBody = makeRequest(URI.create("$BASE_URL${ips.joinToString(",")}$DEFAULT_FORMAT"))
-			return gson.fromJson(responseBody, Array<IpInfo>::class.java).toList()
+			return Json.decodeFromString<ArrayList<IpInfo>>(responseBody)
 		}
 
 		/**

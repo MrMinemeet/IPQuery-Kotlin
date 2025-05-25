@@ -5,6 +5,9 @@
 
 package info
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class RiskInfo(
 	// Intentionally snake_case to match JSON
 	val is_mobile: Boolean,
